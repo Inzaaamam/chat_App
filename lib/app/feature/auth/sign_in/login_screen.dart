@@ -26,172 +26,183 @@ class SignIn extends StatelessWidget {
       create: (context) => SignCubit(),
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-          appBar: AppBar(
-            surfaceTintColor: Colors.transparent,
-            toolbarHeight: 40,
-            iconTheme: const IconThemeData(color: AppColor.textColor),
-            backgroundColor: AppColor.primaryColor,
-          ),
-          body: SingleChildScrollView(
-            child: BlocListener<SignCubit, SignState>(
-              listener: (context, state) {
-                if (state.status == Status.loaded) {
-                  Navigator.of(context).pushNamed(AppRoutes.dashBoard);
-                } else if (state.status == Status.error) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Invalid Credentials'),
-                      backgroundColor: Colors.red,
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                }
-              },
-              child: BlocBuilder<SignCubit, SignState>(
-                builder: (context, state) {
-                  return ReactiveForm(
-                    formGroup: form,
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 100,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: AppColor.primaryColor,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(15.0),
-                                bottomRight: Radius.circular(15.0),
+        child: WillPopScope(
+          onWillPop: () async {
+            return false;
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoutes.welcome);
+                },
+                icon: const Icon(Icons.arrow_back),
+              ),
+              surfaceTintColor: Colors.transparent,
+              toolbarHeight: 40,
+              iconTheme: const IconThemeData(color: AppColor.textColor),
+              backgroundColor: AppColor.primaryColor,
+            ),
+            body: SingleChildScrollView(
+              child: BlocListener<SignCubit, SignState>(
+                listener: (context, state) {
+                  if (state.status == Status.loaded) {
+                    Navigator.of(context).pushNamed(AppRoutes.dashBoard);
+                  } else if (state.status == Status.error) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Invalid Credentials'),
+                        backgroundColor: Colors.red,
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                },
+                child: BlocBuilder<SignCubit, SignState>(
+                  builder: (context, state) {
+                    return ReactiveForm(
+                      formGroup: form,
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 100,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: AppColor.primaryColor,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(15.0),
+                                  bottomRight: Radius.circular(15.0),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 20),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Login',
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                                color: AppColor.textColor, fontSize: 30),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'Enter Email and Password for login',
+                                            style: TextStyle(
+                                                color: AppColor.textColor, fontSize: 16),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 20),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                height: 40,
+                              ),
+                              const CustomReactiveFied(
+                                hintText: 'Enter your Email',
+                                formController: 'email',
+                                validationMessage: 'Enter valid Email',
+                                labal: 'Enter your Email',
+                              ),
+                              const SizedBox(
+                                height: 25,
+                              ),
+                              const CustomReactivePasswordField(
+                                hintText: 'Enter Password',
+                                formController: 'password',
+                                validationMessage: 'Enter Password',
+                                label: 'Enter Password',
+                              ),
+                              const SizedBox(
+                                height: 40,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: CustomButton(
+                                        childWidget: state.status == Status.isLoading
+                                            ? const SizedBox(
+                                                height: Sizes.s28,
+                                                width: Sizes.s28,
+                                                child: Center(
+                                                  child: CircularProgressIndicator(
+                                                    color: AppColor.textColor,
+                                                  ),
+                                                ),
+                                              )
+                                            : const Text(
+                                                'Login',
+                                                style: TextStyle(
+                                                    color: AppColor.textColor,
+                                                    fontSize: 16),
+                                              ),
+                                        onTap: () {
+                                          if (form.valid) {
+                                            String email = form.control('email').value;
+                                            String password =
+                                                form.control('password').value;
+                                            context
+                                                .read<SignCubit>()
+                                                .login(email, password);
+                                          } else {
+                                            form.markAllAsTouched();
+                                          }
+                                        },
+                                        color: AppColor.primaryColor,
+                                        size: 18,
+                                        height: 50),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      text: "Dont have an account?",
+                                      style: const TextStyle(
+                                          color: Colors.black, fontSize: 14),
                                       children: [
-                                        Text(
-                                          'Login',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              color: AppColor.textColor, fontSize: 30),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          'Enter Email and Password for login',
-                                          style: TextStyle(
-                                              color: AppColor.textColor, fontSize: 16),
+                                        TextSpan(
+                                          text: ' Register',
+                                          style: const TextStyle(
+                                              color: AppColor.primaryColor,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              Navigator.of(context)
+                                                  .pushNamed(AppRoutes.signup);
+                                            },
                                         ),
                                       ],
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(
-                              height: 40,
-                            ),
-                            const CustomReactiveFied(
-                              hintText: 'Enter your Email',
-                              formController: 'email',
-                              validationMessage: 'Enter valid Email',
-                              labal: 'Enter your Email',
-                            ),
-                            const SizedBox(
-                              height: 25,
-                            ),
-                            const CustomReactivePasswordField(
-                              hintText: 'Enter Password',
-                              formController: 'password',
-                              validationMessage: 'Enter Password',
-                              label: 'Enter Password',
-                            ),
-                            const SizedBox(
-                              height: 40,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: CustomButton(
-                                      childWidget: state.status == Status.isLoading
-                                          ? const SizedBox(
-                                              height: Sizes.s28,
-                                              width: Sizes.s28,
-                                              child: Center(
-                                                child: CircularProgressIndicator(
-                                                  color: AppColor.textColor,
-                                                ),
-                                              ),
-                                            )
-                                          : const Text(
-                                              'Login',
-                                              style: TextStyle(
-                                                  color: AppColor.textColor,
-                                                  fontSize: 16),
-                                            ),
-                                      onTap: () {
-                                        if (form.valid) {
-                                          String email = form.control('email').value;
-                                          String password =
-                                              form.control('password').value;
-                                          context
-                                              .read<SignCubit>()
-                                              .login(email, password);
-                                        } else {
-                                          form.markAllAsTouched();
-                                        }
-                                      },
-                                      color: AppColor.primaryColor,
-                                      size: 18,
-                                      height: 50),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                RichText(
-                                  text: TextSpan(
-                                    text: "Dont have an account?",
-                                    style: const TextStyle(
-                                        color: Colors.black, fontSize: 14),
-                                    children: [
-                                      TextSpan(
-                                        text: ' Register',
-                                        style: const TextStyle(
-                                            color: AppColor.primaryColor,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            Navigator.of(context)
-                                                .pushNamed(AppRoutes.signup);
-                                          },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ).padSymetric(20, 30)
-                      ],
-                    ),
-                  );
-                },
+                                ],
+                              )
+                            ],
+                          ).padSymetric(20, 30)
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),

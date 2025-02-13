@@ -1,5 +1,6 @@
 import 'package:chat_app/app/feature/auth/sign_in/login_screen.dart';
 import 'package:chat_app/app/feature/auth/signup/register_screen.dart';
+import 'package:chat_app/app/feature/dashboard/main_screen/main_screen.dart';
 import 'package:chat_app/app/feature/welcom/welcome_screen.dart';
 import 'package:chat_app/app/routes/constant.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,6 +22,8 @@ class RouterClass {
         return MaterialPageRoute(builder: (_) => const RegisterScreen());
       case AppRoutes.dashBoard:
         return MaterialPageRoute(builder: (_) => const DashBoardScreen());
+      case AppRoutes.mainScreen:
+        return MaterialPageRoute(builder: (_) => const MainScreen());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

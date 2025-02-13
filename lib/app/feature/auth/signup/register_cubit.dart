@@ -29,7 +29,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         });
       }
       emit(state.copyWith(status: Status.loaded));
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       String errorMessage;
       if (e.toString().contains('email-already-in-use')) {
         errorMessage = 'This email is already registered. Try logging in.';
@@ -37,6 +37,8 @@ class RegisterCubit extends Cubit<RegisterState> {
         errorMessage = 'Incorrect password. Please try again.';
       } else if (e.toString().contains('user-not-found')) {
         errorMessage = 'No user found with this email.';
+      } else if (e.toString() == 'weak-password') {
+        errorMessage = 'The password provided is too weak.';
       } else {
         errorMessage = 'Something went wrong. Please try again.';
       }

@@ -57,7 +57,7 @@ class WelComeScreen extends StatelessWidget {
                           'Next',
                       size: 18,
                       onTap: () {
-                        Navigator.pushNamed(context, AppRoutes.signup);
+                        Navigator.of(context).pushNamed(AppRoutes.login);
                       },
                     ).padOnly(left: 20, right: 20, top: 80, bottom: 0),
                   ),
