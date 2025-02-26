@@ -68,6 +68,7 @@ class CustomReactivePasswordField extends StatelessWidget {
             ),
             validationMessages: {
               ValidationMessage.required: (error) => validationMessage,
+              ValidationMessage.mustMatch: (error) => 'Password must match',
             },
           );
         },

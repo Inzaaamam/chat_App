@@ -1,20 +1,18 @@
 import 'package:chat_app/app/feature/dashboard/main_dashboard/dashboard_screen.dart';
 import 'package:chat_app/app/feature/splash/splash_screen.dart';
-import 'package:chat_app/app/feature/welcom/welcome_screen.dart';
 import 'package:chat_app/app/sdk/style/color/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'main_cubit.dart';
 import 'main_state.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
-  static const List<Widget> widgetOptions = [
+  static List<Widget> widgetOptions = [
     DashBoardScreen(),
-    WelComeScreen(),
-    SplashScreen(),
+    const SplashScreen(),
+    const SplashScreen(),
   ];
 
   @override

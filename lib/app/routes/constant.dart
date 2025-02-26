@@ -5,4 +5,5 @@ class AppRoutes {
   static const String signup = 'signup';
   static const String dashBoard = 'dashBoard';
   static const String mainScreen = 'mainScreen';
+  static const String chatScreen = 'chatScreen';
 }

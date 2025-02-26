@@ -18,7 +18,6 @@ import '../../../sdk/widget/reactive_text_field.dart';
 
 class SignIn extends StatelessWidget {
   const SignIn({super.key});
-
   @override
   Widget build(BuildContext context) {
     final form = LoginForm.loginForm;

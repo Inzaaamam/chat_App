@@ -10,8 +10,8 @@ class SignCubit extends Cubit<SignState> {
   Future<void> login(String email, String password) async {
     try {
       emit(state.copyWith(status: Status.isLoading));
-      final _auth = FirebaseAuth.instance;
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      final auth = FirebaseAuth.instance;
+      await auth.signInWithEmailAndPassword(email: email, password: password);
       emit(state.copyWith(status: Status.loaded));
     } catch (e) {
       // String errorMessage;
